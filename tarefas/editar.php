@@ -5,13 +5,15 @@ session_start();
 include "basedados.php";
 include "helpers.php";
 
-$exibir_tabela = true;
+$exibir_tabela = false;
 
 $tem_erros = false;
 $erros_validacao = array();
 
 if (tem_post()) {
     $tarefa = array();
+
+    $tarefa['id'] = $_POST['id'];
 
     if (isset($_POST['nome']) && strlen($_POST['nome']) > 0) {
         $tarefa['nome'] = $_POST['nome'];
@@ -46,21 +48,19 @@ if (tem_post()) {
     }
 
     if (!$tem_erros) {
-        put_tarefa($conexao, $tarefa);
+        editar_tarefa($conexao, $tarefa);
         header('Location: tarefas.php');
         die();
     }
 }
 
-$lista_tarefas = get_tarefas($conexao);
+$tarefa = get_tarefa($conexao, $_POST['id']);
 
-$tarefa = array(
-    'id'            => 0,
-    'nome'          => (isset($_POST['nome'])) ? $_POST['nome'] : '',
-    'descricao'     => (isset($_POST['descricao'])) ? $_POST['descricao'] : '',
-    'prazo'         => (isset($_POST['prazo'])) ? traduz_data_para_basedados($_POST['prazo']) : '',
-    'prioridade'    => (isset($_POST['prioridade'])) ? $_POST['prioridade'] : '',
-    'concluida'     => (isset($_POST['concluida'])) ? $_POST['concluida'] : '',
-);
+$tarefa['nome'] = isset($_POST['nome']) ? $_POST['nome'] : $tarefa['nome'];
+$tarefa['descricao'] = isset($_POST['descricao']) ? $_POST['descricao'] : $tarefa['descricao'];
+$tarefa['prazo'] = isset($_POST['prazo']) ? $_POST['prazo'] : $tarefa['prazo'];
+$tarefa['prioridade'] = isset($_POST['prioridade']) ? $_POST['prioridade'] : $tarefa['prioridade'];
+$tarefa['concluida'] = isset($_POST['concluida']) ? $_POST['concluida'] : $tarefa['concluida'];
+
 
 include "template.php";

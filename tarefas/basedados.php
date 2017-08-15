@@ -24,11 +24,42 @@ function get_tarefas($conexao) {
     return $tarefas;
 }
 
+function get_tarefa($conexao, $id) {
+    $sqlSelect = 'SELECT * FROM Tarefas WHERE id = ' . $id;
+    $resultado = mysqli_query($conexao, $sqlSelect);
+    return mysqli_fetch_assoc($resultado);
+}
+
 function put_tarefa($conexao, $tarefa) {
     $sqlGravar = "
-        INSERT INTO Tarefas (nome, descricao, prioridade, prazo)
-        VALUES ('{$tarefa['nome']}', '{$tarefa['descricao']}', {$tarefa['prioridade']}, '{$tarefa['prazo']}')
+        INSERT INTO Tarefas (nome, descricao, prioridade, prazo, concluida)
+        VALUES ('{$tarefa['nome']}', '{$tarefa['descricao']}', {$tarefa['prioridade']}, '{$tarefa['prazo']}', {$tarefa['concluida']})
     ";
 
     mysqli_query($conexao, $sqlGravar);
+}
+
+function editar_tarefa($conexao, $tarefa) {
+    $sql = "UPDATE Tarefas SET
+                nome = '{$tarefa['nome']}',
+                descricao = '{$tarefa['descricao']}',
+                prioridade = {$tarefa['prioridade']},
+                prazo = '{$tarefa['prazo']}',
+                concluida = {$tarefa['concluida']}
+            WHERE id = {$tarefa['id']}
+    ";
+
+    mysqli_query($conexao, $sql);
+}
+
+function remover_tarefa($conexao, $id) {
+    $sqlRemove = "DELETE FROM Tarefas WHERE id = {$id}";
+
+    mysqli_query($conexao, $sqlRemove);
+}
+
+function remover_tarefas_concluidas($conexao) {
+    $sqlRemove = "DELETE FROM Tarefas WHERE concluida = 1";
+
+    mysqli_query($conexao, $sqlRemove);
 }
