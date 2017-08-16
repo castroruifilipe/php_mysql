@@ -63,3 +63,27 @@ function remover_tarefas_concluidas($conexao) {
 
     mysqli_query($conexao, $sqlRemove);
 }
+
+function put_anexo($conexao, $anexo) {
+    $sqlInsert = "INSERT INTO Anexos (tarefa, nome, ficheiro)
+                  VALUES ({$anexo['tarefa_id']},
+                          '{$anexo['nome']}',
+                          '{$anexo['ficheiro']}'
+                          )
+    ";
+    mysqli_query($conexao, $sqlInsert);
+}
+
+function get_anexos($conexao, $tarefa_id) {
+    $sql = "SELECT * FROM Anexos
+            WHERE tarefa = {$tarefa_id}
+    ";
+    $resultado = mysqli_query($conexao, $sql);
+
+    $anexos = array();
+    while ($anexo = mysqli_fetch_assoc($resultado)) {
+        $anexos[] = $anexo;
+    }
+
+    return $anexos;
+}
