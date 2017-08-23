@@ -1,5 +1,6 @@
 <?php
 
+include "config.php";
 include "basedados.php";
 include "helpers.php";
 

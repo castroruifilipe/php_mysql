@@ -1,11 +1,6 @@
 <?php
 
-$bdServidor = '127.0.0.1';
-$bdUser = 'gestor';
-$bdPassword = '';
-$bdBaseDados = 'tarefas';
-
-$conexao = mysqli_connect($bdServidor, $bdUser, $bdPassword, $bdBaseDados);
+$conexao = mysqli_connect(BD_SERVIDOR, BD_USER, BD_PASSWORD, BD_BASEDADOS);
 
 if (mysqli_connect_errno($conexao)) {
     echo "Problemas na conexão à base de dados.";

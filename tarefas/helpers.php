@@ -90,3 +90,44 @@ function tratar_anexo($anexo) {
     move_uploaded_file($anexo['tmp_name'], "anexos/{$anexo['name']}");
     return true;
 }
+
+function enviar_email($tarefa, $anexos = array()) {
+    // Aceder ao sistema de emails
+    include "libraries/PHPMailer/PHPMailerAutoload.php";
+    // Fazer a autenticação
+    $email = new PHPMailer();
+    $email->isSMTP();
+    $email->Host = "smtp.gmail.com";
+    $email->Port = 587;
+    $email->SMTPSecure = 'tls';
+    $email->SMTPAuth = true;
+    $email->Username = EMAIL_USERNAME;
+    $email->Password = EMAIL_PASSWORD;
+    $email->setFrom(EMAIL_USERNAME, "Gestor de Tarefas");
+    // Escrever o email do destinatário
+    $email->addAddress(EMAIL_NOTIFICACAO);
+    // Escrever o assunto do email
+    $email->Subject = "Lembrete de tarefa: {$tarefa['nome']}";
+    // Escrever o corpo do email
+    $corpo = preparar_corpo_email($tarefa, $anexos);
+    $email->isHTML(true);
+    $email->Body = $corpo;
+    // Adicionar os anexos quando necessário
+    foreach ($anexos as $anexo) {
+        $email->addAttachment("anexos/{$anexo['ficheiro']}");
+    }
+    // Usar a opção de enviar o email
+    $email->send();
+}
+
+function preparar_corpo_email($tarefa, $anexos) {
+    // Impedir que o PHP envie o processamento para o navegador
+    ob_start();
+    // Incluir o ficheiro template
+    include "template_email.php";
+    // Guardar o conteúdo do ficheiro numa variável
+    $corpo = ob_get_contents();
+    // Terminar impedimento de enviar processamento para o navegador
+    ob_end_clean();
+    return $corpo;
+}

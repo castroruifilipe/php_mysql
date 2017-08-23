@@ -2,6 +2,7 @@
 
 session_start();
 
+include "config.php";
 include "basedados.php";
 include "helpers.php";
 
@@ -49,12 +50,18 @@ if (tem_post()) {
 
     if (!$tem_erros) {
         editar_tarefa($conexao, $tarefa);
+
+        if (isset($_POST['lembrete']) && $_POST['lembrete'] == '1') {
+            $anexos = get_anexos($conexao, $tarefa['id']);
+            enviar_email($tarefa, $anexos);
+        }
+
         header('Location: tarefas.php');
         die();
     }
 }
 
-$tarefa = get_tarefa($conexao, $_POST['id']);
+$tarefa = get_tarefa($conexao, $_GET['id']);
 
 $tarefa['nome'] = isset($_POST['nome']) ? $_POST['nome'] : $tarefa['nome'];
 $tarefa['descricao'] = isset($_POST['descricao']) ? $_POST['descricao'] : $tarefa['descricao'];
