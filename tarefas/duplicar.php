@@ -1,9 +1,13 @@
 <?php
 
+include "config.php";
 include "basedados.php";
+include "models/Tarefas.php";
 
-$tarefa = get_tarefa($conexao, $_GET['id']);
+$tarefas = new Tarefas($mysqli);
 
-put_tarefa($conexao, $tarefa);
+$tarefa = $tarefas->get_tarefa($_GET['id']);
+
+$tarefas->put_tarefa($tarefa);
 
 header('Location: tarefas.php');

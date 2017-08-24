@@ -3,6 +3,9 @@
 include "config.php";
 include "basedados.php";
 include "helpers.php";
+include "models/Tarefas.php";
+
+$tarefas = new Tarefas($mysqli);
 
 $tem_erros = false;
 $erros_validacao = array();
@@ -26,11 +29,11 @@ if (tem_post()) {
     }
 
     if (!$tem_erros) {
-        put_anexo($conexao, $anexo);
+        $tarefas->put_anexo($anexo);
     }
 }
 
-$tarefa = get_tarefa($conexao, $_GET['id']);
-$anexos = get_anexos($conexao, $_GET['id']);
+$tarefa = $tarefas->get_tarefa($_GET['id']);
+$anexos = $tarefas->get_anexos($_GET['id']);
 
 include "template_tarefa.php";

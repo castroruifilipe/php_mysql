@@ -5,6 +5,9 @@ session_start();
 include "config.php";
 include "basedados.php";
 include "helpers.php";
+include "models/Tarefas.php";
+
+$tarefas = new Tarefas($mysqli);
 
 $exibir_tabela = true;
 
@@ -47,7 +50,7 @@ if (tem_post()) {
     }
 
     if (!$tem_erros) {
-        put_tarefa($conexao, $tarefa);
+        $tarefas->put_tarefa($tarefa);
 
         if (isset($_POST['lembrete']) && $_POST['lembrete'] == '1') {
             enviar_email($tarefa);
@@ -58,7 +61,7 @@ if (tem_post()) {
     }
 }
 
-$lista_tarefas = get_tarefas($conexao);
+$tarefas->get_tarefas();
 
 $tarefa = array(
     'id'            => 0,

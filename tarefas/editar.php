@@ -5,6 +5,9 @@ session_start();
 include "config.php";
 include "basedados.php";
 include "helpers.php";
+include "models/Tarefas.php";
+
+$tarefas = new Tarefas($mysqli);
 
 $exibir_tabela = false;
 
@@ -49,10 +52,10 @@ if (tem_post()) {
     }
 
     if (!$tem_erros) {
-        editar_tarefa($conexao, $tarefa);
+        $tarefas->editar_tarefa($tarefa);
 
         if (isset($_POST['lembrete']) && $_POST['lembrete'] == '1') {
-            $anexos = get_anexos($conexao, $tarefa['id']);
+            $anexos = $tarefas->get_anexos($tarefa['id']);
             enviar_email($tarefa, $anexos);
         }
 
@@ -61,7 +64,8 @@ if (tem_post()) {
     }
 }
 
-$tarefa = get_tarefa($conexao, $_GET['id']);
+$tarefas->get_tarefa($_GET['id']);
+$tarefa = $tarefas->tarefa;
 
 $tarefa['nome'] = isset($_POST['nome']) ? $_POST['nome'] : $tarefa['nome'];
 $tarefa['descricao'] = isset($_POST['descricao']) ? $_POST['descricao'] : $tarefa['descricao'];
