@@ -6,7 +6,8 @@ include "models/Tarefas.php";
 
 $tarefas = new Tarefas($mysqli);
 
-$tarefa = $tarefas->get_tarefa($_GET['id']);
+$tarefas->get_tarefa($_GET['id']);
+$tarefa = $tarefas->tarefa;
 
 $tarefas->put_tarefa($tarefa);
 
